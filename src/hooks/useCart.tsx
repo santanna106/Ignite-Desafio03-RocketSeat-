@@ -48,7 +48,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         localStorage.setItem('@RocketShoes:cart', JSON.stringify(cart));
       }
     } catch {
-      // TODO
+      toast.error('Erro na adição do produto');
     }
   };
 
@@ -95,17 +95,20 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
           } else {
 
             
-            let amountUpdate = 0;
+            let amountUpdate = await getCountStokProduct(productId);
+            let ret = true;
             const newCart =  cart.map((product) => {
               if(product.id === productId){
-                product.amount += 1;
-                amountUpdate = product.amount ;
+                if(amountUpdate >= (product.amount + 1) )
+                  product.amount += 1;
+                else 
+                  amountUpdate += 1;
               }
       
               return product;
             });
 
-            let ret = await ValidateOperationStock({productId:productId,amount:amountUpdate})
+            ret = await ValidateOperationStock({productId:productId,amount:amountUpdate})
             
 
             if(ret){
