@@ -23,7 +23,7 @@ interface CartItemsAmount {
 
 const Home = (): JSX.Element => {
   const [products, setProducts] = useState<ProductFormatted[]>([]);
-   const { addProduct,createProduct, cart } = useCart();
+   const { addProduct, cart } = useCart();
 
 
   const cartItemsAmount = cart.reduce((sumAmount, product) => {
@@ -52,41 +52,9 @@ const Home = (): JSX.Element => {
     loadProducts();
   }, []);
 
-  function getFindProductToCreate(id:number){
-    const product = products.find((product) => product.id === id );
-    if(product){
-      const productCart = {
-        id:product.id ,
-        title: product.title,
-        price: product.price ,
-        image: product.image,
-        amount: 1 ,
-      
-      }
-      return productCart;
-    }
-
-    return product;
-  }
-
-  function VerifyExistsProduct(id:number){
-    const productCart = cart.find((product) => product.id === id );
-    if(productCart){
-      return true;
-    }
-    return false;
-  }
-
+  
   async function handleAddProduct(id: number) {
-      console.log(cartItemsAmount);
-      if(!VerifyExistsProduct(id)){
-        const productCart =  getFindProductToCreate(id);
-        if(productCart){
-          await createProduct(productCart);
-        }
-      } else {
-        addProduct(id);
-      }
+      addProduct(id);
   }
 
   return (
