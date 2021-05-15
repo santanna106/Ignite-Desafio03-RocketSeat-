@@ -14,6 +14,7 @@ interface UpdateProductAmount {
 
 interface CartContextData {
   cart: Product[];
+  createProduct: (product: Product) =>  Promise<void>;
   addProduct: (productId: number) => Promise<void>;
   removeProduct: (productId: number) => void;
   updateProductAmount: ({ productId, amount }: UpdateProductAmount) => void;
@@ -23,18 +24,42 @@ const CartContext = createContext<CartContextData>({} as CartContextData);
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [cart, setCart] = useState<Product[]>(() => {
-    // const storagedCart = Buscar dados do localStorage
+     const storagedCart = localStorage.getItem('@RocketShoes:cart');
 
-    // if (storagedCart) {
-    //   return JSON.parse(storagedCart);
-    // }
+     console.log('CART HOOK',storagedCart);
+
+     if (storagedCart) {
+       return JSON.parse(storagedCart);
+     }
 
     return [];
   });
 
+  const createProduct = async (product: Product) => {
+    try {
+     setCart(prev => [...prev,product]);
+      //console.log('CART INTERNO : ',[...cart,product]);
+      await localStorage.setItem('@RocketShoes:cart', JSON.stringify(cart));
+    } catch {
+      // TODO
+    }
+  };
+
   const addProduct = async (productId: number) => {
     try {
-      // TODO
+     
+      const newCart = cart.map((product) => {
+        if(product.id === productId){
+          product.amount += 1;
+          product.price  +=product.price;
+        }
+
+        return product;
+      });
+
+      setCart(newCart);
+      await localStorage.setItem('@RocketShoes:cart', JSON.stringify(newCart));
+
     } catch {
       // TODO
     }
@@ -61,7 +86,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   return (
     <CartContext.Provider
-      value={{ cart, addProduct, removeProduct, updateProductAmount }}
+      value={{ cart,createProduct, addProduct, removeProduct, updateProductAmount }}
     >
       {children}
     </CartContext.Provider>
