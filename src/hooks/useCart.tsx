@@ -26,8 +26,6 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [cart, setCart] = useState<Product[]>(() => {
      const storagedCart = localStorage.getItem('@RocketShoes:cart');
 
-     console.log('CART HOOK',storagedCart);
-
      if (storagedCart) {
        return JSON.parse(storagedCart);
      }
@@ -51,7 +49,6 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       const newCart = cart.map((product) => {
         if(product.id === productId){
           product.amount += 1;
-          product.price  +=product.price;
         }
 
         return product;
@@ -67,7 +64,9 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const removeProduct = (productId: number) => {
     try {
-      // TODO
+      const newCart = cart.filter((product) => product.id !== productId);
+      setCart(newCart);
+      localStorage.setItem('@RocketShoes:cart', JSON.stringify(newCart));
     } catch {
       // TODO
     }
@@ -78,7 +77,17 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
-      // TODO
+      const newCart = cart.map((product) => {
+        if(product.id === productId){
+          product.amount += amount;
+        }
+
+        return product;
+      });
+
+      setCart(newCart);
+      localStorage.setItem('@RocketShoes:cart', JSON.stringify(newCart));
+
     } catch {
       // TODO
     }
