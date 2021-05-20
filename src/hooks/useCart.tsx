@@ -172,8 +172,9 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   }: UpdateProductAmount) => {
     try {
       let amountUpdate = await getCountStokProduct(productId);
+     
       let ret = true;
-      ret = await ValidateOperationStock({productId:productId,amount:amountUpdate})
+      ret = await ValidateOperationStock({productId:productId,amount:amount})
       if(ret){
           if(amount > 0){
         
@@ -198,9 +199,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
             
           }
 
-        } else {
-          toast.error('Quantidade solicitada fora de estoque');
-        }
+        } 
     } catch (e) {
       toast.error('Erro na alteração de quantidade do produto');
     }
