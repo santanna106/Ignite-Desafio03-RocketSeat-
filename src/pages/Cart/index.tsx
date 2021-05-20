@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import {
   MdDelete,
   MdAddCircleOutline,
@@ -18,18 +18,40 @@ interface Product {
   amount: number;
 }
 
+interface ProductFormated {
+  id: number;
+  title: string;
+  price: number;
+  image: string;
+  amount: number;
+  priceFormatted:string;
+  subTotal:string;
+
+}
+
 const Cart = (): JSX.Element => {
   const { cart, removeProduct, updateProductAmount } = useCart();
+  const [cartFormatted,setCartFormatted] = useState<ProductFormated[]>([]);
 
-  const cartFormatted = cart.map(product => ({
-    id: product.id,
-    title: product.title,
-    price: product.price,
-    image: product.image,
-    amount: product.amount,
-    priceFormatted:formatPrice(product.price),
-    subTotal:formatPrice(product.price * product.amount)
-  }))
+  useEffect(() => {
+    function loadCartFormatted(){
+      const cartFormat = cart.map(product => ({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+        amount: product.amount,
+        priceFormatted:formatPrice(product.price),
+        subTotal:formatPrice(product.price * product.amount)
+      }))
+
+      setCartFormatted(cartFormat);
+
+    }
+    loadCartFormatted();
+  },[cart])
+
+  
  
   const total =
      formatPrice(
@@ -43,15 +65,18 @@ const Cart = (): JSX.Element => {
   function handleProductIncrement(product: Product) {
     updateProductAmount({
       productId:product.id,
-      amount:1,
+      amount:product.amount + 1,
     });
   }
 
   function handleProductDecrement(product: Product) {
-    updateProductAmount({
-      productId:product.id,
-      amount: -1,
-    });
+    
+      updateProductAmount({
+        productId:product.id,
+        amount: product.amount  - 1,
+      });
+    
+    
   }
 
   function handleRemoveProduct(productId: number) {
