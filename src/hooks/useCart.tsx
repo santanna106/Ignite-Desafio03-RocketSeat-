@@ -172,7 +172,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   }: UpdateProductAmount) => {
     try {
       let amountUpdate = await getCountStokProduct(productId);
-     
+      console.log('amount: ',amount);
       let ret = true;
       ret = await ValidateOperationStock({productId:productId,amount:amount})
       if(ret){
@@ -191,7 +191,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
               return product;
             });
-
+            
             if(ret){
               setCart(newCart);
               localStorage.setItem('@RocketShoes:cart', JSON.stringify(newCart));

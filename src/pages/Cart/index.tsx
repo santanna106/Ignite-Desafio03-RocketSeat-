@@ -33,24 +33,17 @@ const Cart = (): JSX.Element => {
   const { cart, removeProduct, updateProductAmount } = useCart();
   const [cartFormatted,setCartFormatted] = useState<ProductFormated[]>([]);
 
-  useEffect(() => {
-    function loadCartFormatted(){
-      const cartFormat = cart.map(product => ({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        image: product.image,
-        amount: product.amount,
-        priceFormatted:formatPrice(product.price),
-        subTotal:formatPrice(product.price * product.amount)
-      }))
+  const cartFormat = cart.map(product => ({
+    id: product.id,
+    title: product.title,
+    price: product.price,
+    image: product.image,
+    amount: product.amount,
+    priceFormatted:formatPrice(product.price),
+    subTotal:formatPrice(product.price * product.amount)
+  }))
 
-      setCartFormatted(cartFormat);
-
-    }
-    loadCartFormatted();
-  },[cart])
-
+  
   
  
   const total =
@@ -98,7 +91,7 @@ const Cart = (): JSX.Element => {
         <tbody>
           
           {
-            cartFormatted.map((product) => {
+            cart.map((product) => {
               return (
                       <tr key={product.id} data-testid="product">
                         <td>
@@ -106,7 +99,7 @@ const Cart = (): JSX.Element => {
                         </td>
                         <td>
                           <strong>{product.title}</strong>
-                          <span>{product.priceFormatted}</span>
+                          <span>{formatPrice(product.price)}</span>
                         </td>
                         <td>
                           <div>
@@ -122,7 +115,7 @@ const Cart = (): JSX.Element => {
                               type="text"
                               data-testid="product-amount"
                               readOnly
-                              value={product.amount}
+                              value={String(product.amount)}
                             />
                             <button
                               type="button"
@@ -134,7 +127,7 @@ const Cart = (): JSX.Element => {
                           </div>
                         </td>
                         <td>
-                          <strong>{product.subTotal}</strong>
+                          <strong>{formatPrice(product.price * product.amount)}</strong>
                         </td>
                         <td>
                           <button

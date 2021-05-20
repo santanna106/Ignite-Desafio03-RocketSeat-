@@ -23,7 +23,7 @@ interface CartItemsAmount {
 
 const Home = (): JSX.Element => {
   const [products, setProducts] = useState<ProductFormatted[]>([]);
-   const { addProduct, cart,updateProductAmount} = useCart();
+   const { addProduct, cart} = useCart();
    
    
   
@@ -50,11 +50,6 @@ const Home = (): JSX.Element => {
     async function loadProducts() {
       const response = await api.get('http://localhost:3333/products');
       setProducts(response.data);
-
-  
-
-     
-   
     }
 
     loadProducts();
